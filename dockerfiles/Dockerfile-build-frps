@@ -11,6 +11,5 @@ FROM alpine:latest
 
 WORKDIR /app
 COPY --from=builder /go/src/github.com/fatedier/frp/bin/frps /usr/bin
-COPY --from=builder /go/src/github.com/fatedier/frp/conf/frps_env.ini /app
 
-ENTRYPOINT ["/usr/bin/frps", "-c", "/app/frps_env.ini"]
+ENTRYPOINT ["/usr/bin/frps"]

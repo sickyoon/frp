@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frps
+data:
+  frps.ini: |-
+{{ tpl (.Files.Get "frps.ini") . | indent 4 }}
