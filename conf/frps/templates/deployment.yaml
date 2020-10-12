@@ -33,26 +33,25 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["-c", "/etc/frps.ini"]
+          command: ["/usr/bin/frps", "-c", "/etc/frps/frps.ini"]
           volumeMounts:
-          - name: frps.ini
-            mountPath: /etc/frps.ini
+          - name: frps
+            mountPath: /etc/frps
+            readOnly: true
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 7500
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            tcpSocket:
+              port: {{ .Values.frps.dashboard.port }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            tcpSocket:
+              port: {{ .Values.frps.dashboard.port }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: frps.ini
+        - name: frps
           configMap:
             name: frps    
       {{- with .Values.nodeSelector }}
